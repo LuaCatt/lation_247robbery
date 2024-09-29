@@ -4,7 +4,8 @@ Config = {} -- Do not alter
 -- 🛒 Shop Now: https://lationscripts.com/github
 -- 💬 Join Discord: https://discord.gg/9EbY4nM5uu
 -- 😢 How dare you leave this option false?!
-Config.YouFoundTheBestScripts = false
+-- 🐱‍👤 I didn't >^.^< - Luacat
+Config.YouFoundTheBestScripts = true -- meow
 
 ----------------------------------------------
 --        🛠️ Setup the basics below
@@ -88,7 +89,11 @@ Config.Registers = {
     },
     -- After a successful register robbery, what item do you want to reward
     -- And how much of it? Set the item = 'name' below and min/max quantites
-    reward = { item = 'black_money', min = 1000, max = 1000 },
+    rewards = {
+        { item = 'black_money', min = 1000, max = 2000 },
+        { item = 'lationscripts', min = 1, max = 2 },
+        { item = 'lationscripts', min = 1, max = 3 },
+    },
     -- If a player fails to successfully lockpick the register
     -- There is a chance that their lockpick will break. In percentage,
     -- What chance do you want their lockpick to break? To never break, set 0
@@ -136,7 +141,10 @@ Config.Safes = {
     maxAttempts = 3,
     -- After a successful safe robbery, what item do you want to reward
     -- And how much of it? Set the item = 'name' below and min/max quantites
-    reward = { item = 'black_money', min = 2000, max = 7000 },
+    reward = 
+        { item = 'black_money', min = 2000, max = 7000 },
+        { item = 'lationscripts', min = 1, max = 2 },
+        { item = 'lationscripts', min = 1, max = 3 },
 }
 
 ----------------------------------------------

@@ -130,7 +130,6 @@ RegisterNetEvent('lation_247robbery:CompleteRegisterRobbery', function()
         EventLog('[main.lua]: lation_247robbery:CompleteRegisterRobbery: unable to retrieve source', 'error')
         return
     end
-    local source = source
     local identifier = GetIdentifier(source)
     if not identifier then
         EventLog('[main.lua]: lation_247robbery:CompleteRegisterRobbery: unable to retrieve player identifier', 'error')
@@ -150,26 +149,34 @@ RegisterNetEvent('lation_247robbery:CompleteRegisterRobbery', function()
         EventLog('[main.lua]: lation_247robbery:CompleteRegisterRobbery: player not nearby any registers', 'error')
         return
     end
-    local data = Config.Registers.reward
-    if not data then
-        EventLog('[main.lua]: lation_247robbery:CompleteRegisterRobbery: unable to retrieve config data', 'error')
+    local rewards = Config.Registers.rewards
+    if not rewards or #rewards == 0 then
+        EventLog('[main.lua]: lation_247robbery:CompleteRegisterRobbery: unable to retrieve register reward config data', 'error')
         return
     end
-    local quantity = math.random(data.min, data.max)
+
+    local rewardIndex = math.random(1, #rewards)
+    local chosenReward = rewards[rewardIndex]
+
+    local quantity = math.random(chosenReward.min, chosenReward.max)
+
     if Config.Police.risk then
         local police = GetPoliceCount()
         local increase = 1 + (police * Config.Police.percent / 100)
         quantity = math.floor(quantity * increase)
     end
+
     states[identifier].state = 'completed'
     states[identifier].completed = os.time()
-    AddItem(source, data.item, quantity)
+    AddItem(source, chosenReward.item, quantity)
+
     if Logs.Events.register_robbed then
         local log = Strings.Logs.register_robbed.message
         local message = string.format(log, tostring(name), tostring(identifier), tostring(GroupDigits(quantity)))
         PlayerLog(source, Strings.Logs.register_robbed.title, message)
     end
 end)
+
 
 -- Event to handle robbery completion and rewards
 RegisterNetEvent('lation_247robbery:CompleteSafeRobbery', function()
@@ -196,26 +203,33 @@ RegisterNetEvent('lation_247robbery:CompleteSafeRobbery', function()
         EventLog('[main.lua]: lation_247robbery:CompleteSafeRobbery: player not nearby any safes', 'error')
         return
     end
-    local data = Config.Safes.reward
-    if not data then
+    local rewards = Config.Safes.reward
+    if not rewards or #rewards == 0 then
         EventLog('[main.lua]: lation_247robbery:CompleteSafeRobbery: unable to retrieve safe reward config data', 'error')
         return
     end
-    local quantity = math.random(data.min, data.max)
+
+    local rewardIndex = math.random(1, #rewards)
+    local chosenReward = rewards[rewardIndex]
+    local quantity = math.random(chosenReward.min, chosenReward.max)
+
     if Config.Police.risk then
         local police = GetPoliceCount()
         local increase = 1 + (police * Config.Police.percent / 100)
         quantity = math.floor(quantity * increase)
     end
+
     states[identifier].state = nil
     states[identifier].completed = os.time()
-    AddItem(source, data.item, quantity)
+    AddItem(source, chosenReward.item, quantity)
+
     if Logs.Events.safe_robbed then
         local log = Strings.Logs.safe_robbed.message
         local message = string.format(log, tostring(name), tostring(identifier), tostring(GroupDigits(quantity)))
         PlayerLog(source, Strings.Logs.safe_robbed.title, message)
     end
 end)
+
 
 -- Populate local table with categorized coords
 InitializeStores()
